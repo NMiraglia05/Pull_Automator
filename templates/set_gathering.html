@@ -5,18 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Character Row</title>
   <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    body {
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      margin:24px;
       background:#f7fafc;
       color:#0f172a;
-    }
-    body > *:not(footer) {
-      flex: 1;
-      padding: 24px;
+      position: relative;
+      min-height: 100vh;
     }
     h1{font-size:1.25rem;margin-bottom:8px}
     h2{font-size:1.1rem;margin-top:16px;margin-bottom:6px}
@@ -29,14 +24,17 @@
     select{width:100%;padding:8px;border-radius:6px;border:1px solid #e2e8f0}
     .actions{margin-top:14px}
     #selected-box{border:1px solid #ccc;border-radius:8px;padding:10px;background:#fafafa;min-height:50px;margin-bottom:18px}
-
     footer {
+      width: 100%;
       padding: 12px 0;
       text-align: center;
       font-size: 0.85rem;
       color: white;
       background: #0ea5a4; /* aquamarine */
       border-top: 1px solid #0ca99c;
+      position: absolute;
+      bottom: 0;
+      left: 0;
     }
   </style>
 </head>
@@ -131,7 +129,6 @@ form.addEventListener('submit',async e=>{
     character_data:character_data
   };
 
-  // Instead of expecting JSON, we load the rendered HTML page returned by Flask
   const response=await fetch("/submit_gathering",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
@@ -148,6 +145,5 @@ form.addEventListener('submit',async e=>{
 <footer>
   version: 0.1.0 Made by Azure
 </footer>
-
 </body>
 </html>
