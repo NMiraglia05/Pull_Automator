@@ -341,3 +341,17 @@ def submit_items():
     data=request.get_json()
     selected=data.get("selected", [])
     print("Selected crafted items:", selected)
+
+@app.route("/set_gathering")
+def set_gathering():
+    # Get selected items from session
+    selected_items = session.get("selected_items", [])
+    return render_template("set_gathering.html", selected_items=selected_items)
+
+@app.route("/submit_items", methods=["POST"])
+def submit_items():
+    data = request.get_json()
+    selected = data.get("selected", [])
+    # Save to session so it can be accessed in /set_gathering
+    session["selected_items"] = selected
+    return jsonify({"redirect": url_for("set_gathering")})
