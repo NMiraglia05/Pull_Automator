@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Orders Display</title>
+  <style>
+    :root{
+      --bg:#f7fafc;
+      --card:#fff;
+      --muted:#475569;
+      --accent:#0ea5a4;
+      --border:#e2e8f0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    }
+    body{background:var(--bg);margin:20px;color:#0f172a}
+    h1,h2{font-size:1.25rem;margin-bottom:8px}
+    .container{max-width:900px;margin:0 auto}
+    table{width:100%;border-collapse:collapse;background:var(--card);box-shadow:0 1px 3px rgba(2,6,23,0.08);border-radius:8px;overflow:hidden;margin-bottom:24px}
+    thead th{background:#eef2f7;padding:12px;text-align:left;border-bottom:1px solid var(--border);font-weight:600;color:var(--muted)}
+    tbody td{padding:10px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+    tbody tr:nth-child(odd) td{background:#ffffff}
+    tbody tr:nth-child(even) td{background:#fbfdfe}
+    .key-col{width:70px;font-weight:700;color:var(--accent)}
+    .category-col{width:220px;color:var(--muted)}
+    .items-col{white-space:pre-wrap}
+    .small{font-size:0.85rem;color:#94a3b8}
+    .controls{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+    button{background:var(--accent);border:none;color:white;padding:8px 12px;border-radius:8px;cursor:pointer}
+    button.secondary{background:#64748b}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Pull Schedule</h1>
+
+    <div class="controls">
+      <button id="reloadBtn">Reload</button>
+      <button id="copyBtn" class="secondary">Copy JSON</button>
+      <div style="margin-left:auto" class="small">Each top-level entry expands into 5 category rows.</div>
+    </div>
+
+    <table id="ordersTable" aria-describedby="desc">
+      <caption id="desc" style="display:none">Key | Category | Items</caption>
+      <thead>
+        <tr>
+          <th class="key-col">Key</th>
+          <th class="category-col">Category</th>
+          <th class="items-col">Items</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <h2>Unable to Pull</h2>
+    <table id="unableTable">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Count</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    // Flask will pass pull_schedule and not_pulled into the template
+    const pullSchedule = {{ pull_schedule|tojson }};
+    const notPulled = {{ not_pulled|tojson }};
+    const categories = ['mining','hunting','mercantile','black_market','cargo_ship'];
+
+    const tbody = document.querySelector('#ordersTable tbody');
+    const unableBody = document.querySelector('#unableTable tbody');
+
+    function renderOrders(){
+      tbody.innerHTML = '';
+      for (const entry of pullSchedule){
+        const keys = Object.keys(entry);
+        if (keys.length === 0) continue;
+        const topKey = keys[0];
+        const catObj = entry[topKey];
+        for (const cat of categories){
+          const items = Array.isArray(catObj[cat]) ? catObj[cat] : [];
+          const itemsText = items.length ? items.join(', ') : '—';
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="key-col">${topKey}</td>
+            <td class="category-col">${cat}</td>
+            <td class="items-col">${itemsText}</td>
+          `;
+          tbody.appendChild(tr);
+        }
+      }
+    }
+
+    function renderUnable(){
+      unableBody.innerHTML = '';
+      for (const [item,count] of Object.entries(notPulled)){
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${item}</td><td>${count}</td>`;
+        unableBody.appendChild(tr);
+      }
+    }
+
+    document.getElementById('copyBtn').addEventListener('click', async ()=>{
+      try{
+        await navigator.clipboard.writeText(JSON.stringify(pullSchedule, null, 2));
+        alert('JSON copied to clipboard');
+      } catch (err){
+        alert('Could not copy: ' + err);
+      }
+    });
+
+    document.getElementById('reloadBtn').addEventListener('click', ()=>{
+      renderOrders();
+      renderUnable();
+    });
+
+    renderOrders();
+    renderUnable();
+  </script>
+</body>
+</html>
