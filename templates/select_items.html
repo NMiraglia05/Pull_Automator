@@ -36,104 +36,79 @@
   </table>
 
   <div class="actions">
-  <button id="goToGathering">Proceed to Character Setup</button>
-</div>
+    <button id="goToGathering">Proceed to Character Setup</button>
+  </div>
 
 <script>
+const crafted_item_lookup = {
+  "Animal Traps":{"iron":3},"Cooking Pot":{"copper":3,"wood(strong+durable)":1},"Gardener's Tools":{"iron":2,"wood(strong+durable)":1},
+  "Mason's Chisel":{"iron":3,"wood(strong+durable)":1},"Surgeon's Razor":{"silver":1,"herb(purification)":1},"Surgeon's Needle":{"silver":1,"cloth":1},
+  "Repair Tools":{"iron":3,"wood(strong+durable)":1},"Masterwork Tools":{"iron":2,"cloth":1,"wood(strong+durable)":1},"Whetstone":{"stone":4},
+  "Throwing Snare":{"stone":3,"cloth":3,"soft pelt":1},"Music Box":{"copper":3,"gold":1,"bone":1,"paper":1},"Lasting":{"coal":1,"iron":1,"manganese":1}
+};
+
+const tbody=document.querySelector('#menu tbody');
+const filterInput=document.getElementById('filter');
+const addedBox=document.getElementById('added-box');
+const addedItems=new Set();
+
+function formatMaterials(matObj){
+  return Object.entries(matObj).map(([name,qty])=>`${name}: ${qty}`).join('\n');
+}
+
+function addRow(item,materials){
+  const tr=document.createElement('tr');
+  const tdItem=document.createElement('td'); tdItem.textContent=item;
+  const tdMats=document.createElement('td'); tdMats.className='materials'; tdMats.textContent=formatMaterials(materials);
+  const tdAction=document.createElement('td');
+  const btn=document.createElement('button'); btn.textContent='Add'; btn.onclick=()=>handleAdd(item);
+  tdAction.appendChild(btn);
+  tr.appendChild(tdItem); tr.appendChild(tdMats); tr.appendChild(tdAction);
+  tbody.appendChild(tr);
+}
+
+function handleAdd(item){
+  if(!addedItems.has(item)){
+    addedItems.add(item);
+    renderAdded();
+  }
+}
+
+function renderAdded(){
+  if(addedItems.size===0){
+    addedBox.textContent='(none yet)';
+  }else{
+    addedBox.innerHTML='';
+    for(const item of addedItems){
+      const div=document.createElement('div'); div.className='added-item'; div.textContent=item;
+      addedBox.appendChild(div);
+    }
+  }
+}
+
+function render(filterText=''){
+  tbody.innerHTML='';
+  const f=filterText.trim().toLowerCase();
+  for(const [item,materials] of Object.entries(crafted_item_lookup)){
+    const haystack=item.toLowerCase()+' '+Object.keys(materials).join(' ').toLowerCase();
+    if(!f || haystack.includes(f)) addRow(item,materials);
+  }
+}
+
+render();
+filterInput.addEventListener('keydown',(e)=>{ if(e.key==='Enter') render(filterInput.value); });
+
 document.getElementById("goToGathering").addEventListener("click", async () => {
-  // Collect selected items from your page (adjust the selector to your checkboxes or inputs)
-  const selectedItems = Array.from(document.querySelectorAll('input[name="craftedItem"]:checked'))
-                             .map(input => input.value);
-
-  // Send to Flask
+  if(addedItems.size===0){ alert("Please add at least one item."); return; }
+  const itemsArray = Array.from(addedItems);
   const response = await fetch("/submit_items", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({selected: selectedItems})
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({selected_items: itemsArray})
   });
-
   const data = await response.json();
-  // Redirect to /set_gathering
   window.location.href = data.redirect;
 });
 </script>
-
-  <script>
-    const crafted_item_lookup = {
-      "Animal Traps": {"iron":3},
-      "Cooking Pot": {"copper":3,"wood(strong+durable)":1},
-      "Gardener's Tools": {"iron":2,"wood(strong+durable)":1},
-      "Mason's Chisel": {"iron":3,"wood(strong+durable)":1},
-      "Surgeon's Razor": {"silver":1,"herb(purification)":1},
-      "Surgeon's Needle": {"silver":1,"cloth":1},
-      "Repair Tools": {"iron":3,"wood(strong+durable)":1},
-      "Masterwork Tools": {"iron":2,"cloth":1,"wood(strong+durable)":1},
-      "Whetstone": {"stone":4},
-      "Throwing Snare": {"stone":3,"cloth":3,"soft pelt":1},
-      "Music Box": {"copper":3,"gold":1,"bone":1,"paper":1},
-      "Lasting": {"coal":1,"iron":1,"manganese":1}
-    };
-
-    const tbody=document.querySelector('#menu tbody');
-    const filterInput=document.getElementById('filter');
-    const addedBox=document.getElementById('added-box');
-    const addedItems=new Set();
-
-    function formatMaterials(matObj){
-      return Object.entries(matObj).map(([name,qty])=>`${name}: ${qty}`).join('\n');
-    }
-
-    function addRow(item,materials){
-      const tr=document.createElement('tr');
-      const tdItem=document.createElement('td'); tdItem.textContent=item;
-      const tdMats=document.createElement('td'); tdMats.className='materials'; tdMats.textContent=formatMaterials(materials);
-      const tdAction=document.createElement('td');
-      const btn=document.createElement('button'); btn.textContent='Add'; btn.onclick=()=>handleAdd(item);
-      tdAction.appendChild(btn);
-      tr.appendChild(tdItem); tr.appendChild(tdMats); tr.appendChild(tdAction);
-      tbody.appendChild(tr);
-    }
-
-    function handleAdd(item){
-      if(!addedItems.has(item)){
-        addedItems.add(item);
-        renderAdded();
-      }
-    }
-
-    function renderAdded(){
-      if(addedItems.size===0){
-        addedBox.textContent='(none yet)';
-      }else{
-        addedBox.innerHTML='';
-        for(const item of addedItems){
-          const div=document.createElement('div'); div.className='added-item'; div.textContent=item;
-          addedBox.appendChild(div);
-        }
-      }
-    }
-
-    function render(filterText=''){
-      tbody.innerHTML='';
-      const f=filterText.trim().toLowerCase();
-      for(const [item,materials] of Object.entries(crafted_item_lookup)){
-        const haystack=item.toLowerCase()+' '+Object.keys(materials).join(' ').toLowerCase();
-        if(!f || haystack.includes(f)) addRow(item,materials);
-      }
-    }
-
-    render();
-    filterInput.addEventListener('keydown',(e)=>{ if(e.key==='Enter') render(filterInput.value); });
-
-    document.getElementById('goToGathering').addEventListener('click',()=>{
-      if(addedItems.size===0){ alert('Please add at least one item before proceeding.'); return; }
-      const itemsArray=Array.from(addedItems);
-      fetch('/set_gathering',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({selected_items: itemsArray})
-      }).then(res=>{ if(res.redirected) window.location.href=res.url; });
-    });
-  </script>
 </body>
 </html>
