@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, url_for
 from collections import Counter
 import copy
 
@@ -336,16 +336,17 @@ class PullingPlanner:
 def select_items():
     return render_template("select_items.html")
 
-@app.route("/set_gathering")
+@app.route("/set_gathering", methods=["GET", "POST"])
 def set_gathering():
-    # Get selected items from session
-    selected_items = session.get("selected_items", [])
+    if request.method == "POST":
+        data = request.get_json()
+        selected_items = data.get("selected_items", [])
+    else:
+        selected_items = []
     return render_template("set_gathering.html", selected_items=selected_items)
 
 @app.route("/submit_items", methods=["POST"])
 def submit_items():
     data = request.get_json()
-    selected = data.get("selected", [])
-    # Save to session so it can be accessed in /set_gathering
-    session["selected_items"] = selected
+    selected_items = data.get("selected_items", [])
     return jsonify({"redirect": url_for("set_gathering")})
