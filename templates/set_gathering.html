@@ -17,6 +17,8 @@
     select{width:100%;padding:8px;border-radius:6px;border:1px solid #e2e8f0}
     .actions{margin-top:14px}
     #selected-box{border:1px solid #ccc;border-radius:8px;padding:10px;background:#fafafa;min-height:50px;margin-bottom:18px}
+    /* Footer styling */
+    footer{margin-top:24px;padding:12px 0;text-align:center;font-size:0.85rem;color:#64748b;border-top:1px solid #e2e8f0}
   </style>
 </head>
 <body>
@@ -110,7 +112,6 @@ form.addEventListener('submit',async e=>{
     character_data:character_data
   };
 
-  // Instead of expecting JSON, we load the rendered HTML page returned by Flask
   const response=await fetch("/submit_gathering",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
@@ -123,5 +124,11 @@ form.addEventListener('submit',async e=>{
   document.close();
 });
 </script>
+
+<!-- Footer -->
+<footer>
+  version: 0.1.0 Made by Azure
+</footer>
+
 </body>
 </html>
