@@ -90,7 +90,10 @@ class OrderManager:
             'cargo_ship':[]}  # this will mutate so be careful- it is used to pass whatever the given orders are needed into other contexts
 
         for item in orders:
-            pull_det=Pull(item)
+            try:
+                pull_det=Pull(item)
+            except KeyError:
+                continue
             for _ in range(orders[item]):
                 self.pulls[pull_det.cat].append(pull_det)
 
