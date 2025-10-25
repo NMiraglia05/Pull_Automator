@@ -354,8 +354,9 @@ def submit_gathering():
     data = request.get_json()
     selected_items = data.get("selected_items", [])
     character_data = data.get("character_data", {})
-    
-    print("Selected items:", selected_items)
-    print("Character data:", character_data)
+
+    ass=PullingPlanner(character_data,selected_items)
+
+    print(ass.pulls)
     
     return jsonify({"status": "success"})
