@@ -303,9 +303,8 @@ class PullingPlanner:
         ass_test=AssignmentManager(orders,employees)
         ass=Assignments(ass_test)
         
-        self.pulls.append(ass.all_pulls)
-        
         if ass_test.assignment_made==True:
+            self.pulls.append(ass.all_pulls)
             gathering+=1
             orders=dict(ass.no_pull_out)
             self.assign_gathering(orders,gathering)
