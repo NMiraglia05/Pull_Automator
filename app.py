@@ -359,6 +359,11 @@ def submit_gathering():
 
     ass=PullingPlanner(character_data,selected_items)
 
-    print(ass.pulls)
+    pull_schedule=ass.pulls
+    not_pulled=ass.ineligible_pulls
+
+    print(pull_schedule)
+    print('\n\n')
+    print(not_pulled_)
     
     return jsonify({"status": "success"})
