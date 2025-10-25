@@ -36,8 +36,27 @@
   </table>
 
   <div class="actions">
-    <button id="goToGathering">Proceed to Character Setup</button>
-  </div>
+  <button id="goToGathering">Proceed to Character Setup</button>
+</div>
+
+<script>
+document.getElementById("goToGathering").addEventListener("click", async () => {
+  // Collect selected items from your page (adjust the selector to your checkboxes or inputs)
+  const selectedItems = Array.from(document.querySelectorAll('input[name="craftedItem"]:checked'))
+                             .map(input => input.value);
+
+  // Send to Flask
+  const response = await fetch("/submit_items", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({selected: selectedItems})
+  });
+
+  const data = await response.json();
+  // Redirect to /set_gathering
+  window.location.href = data.redirect;
+});
+</script>
 
   <script>
     const crafted_item_lookup = {
