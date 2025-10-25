@@ -352,9 +352,3 @@ def set_gathering():
         selected_items = []
     print(selected_items)
     return render_template("set_gathering.html", selected_items=selected_items)
-
-@app.route("/submit_items", methods=["POST"])
-def submit_items():
-    data = request.get_json()
-    selected_items = data.get("selected_items", [])
-    return jsonify({"redirect": url_for("set_gathering")})
