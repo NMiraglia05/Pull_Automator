@@ -314,7 +314,7 @@ class PullingPlanner:
             'uuid':None,
             'rank':None,
             'discord':None,
-            'character_name':details['character'],
+            'character_name':details['character_name'],
             'player_name':None,
             'gathering_skills':details['gathering_skills']
         }
