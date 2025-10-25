@@ -17,6 +17,7 @@
     button:hover{background:#e9e9e9}
     #added-box{border:1px solid #ccc;border-radius:8px;padding:10px;background:#fafafa;min-height:50px;margin-bottom:18px}
     .added-item{padding:3px 0}
+    .actions{margin-top:12px}
   </style>
 </head>
 <body>
@@ -33,6 +34,10 @@
     </thead>
     <tbody></tbody>
   </table>
+
+  <div class="actions">
+    <button id="goToGathering">Proceed to Character Setup</button>
+  </div>
 
   <script>
     const crafted_item_lookup = {
@@ -56,29 +61,17 @@
     const addedItems=new Set();
 
     function formatMaterials(matObj){
-      return Object.entries(matObj)
-        .map(([name,qty])=>`${name}: ${qty}`)
-        .join('\n');
+      return Object.entries(matObj).map(([name,qty])=>`${name}: ${qty}`).join('\n');
     }
 
     function addRow(item,materials){
       const tr=document.createElement('tr');
-      const tdItem=document.createElement('td');
-      tdItem.textContent=item;
-
-      const tdMats=document.createElement('td');
-      tdMats.className='materials';
-      tdMats.textContent=formatMaterials(materials);
-
+      const tdItem=document.createElement('td'); tdItem.textContent=item;
+      const tdMats=document.createElement('td'); tdMats.className='materials'; tdMats.textContent=formatMaterials(materials);
       const tdAction=document.createElement('td');
-      const btn=document.createElement('button');
-      btn.textContent='Add';
-      btn.onclick=()=>handleAdd(item);
+      const btn=document.createElement('button'); btn.textContent='Add'; btn.onclick=()=>handleAdd(item);
       tdAction.appendChild(btn);
-
-      tr.appendChild(tdItem);
-      tr.appendChild(tdMats);
-      tr.appendChild(tdAction);
+      tr.appendChild(tdItem); tr.appendChild(tdMats); tr.appendChild(tdAction);
       tbody.appendChild(tr);
     }
 
@@ -95,49 +88,32 @@
       }else{
         addedBox.innerHTML='';
         for(const item of addedItems){
-          const div=document.createElement('div');
-          div.className='added-item';
-          div.textContent=item;
+          const div=document.createElement('div'); div.className='added-item'; div.textContent=item;
           addedBox.appendChild(div);
         }
       }
     }
 
-    function sendToServer(){
-  const payload={selected:Array.from(addedItems)};
-  fetch("/submit_items",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(payload)
-  })
-  .then(res=>res.json())
-  .then(data=>{
-    alert(`Sent ${payload.selected.length} crafted items to server!`);
-    console.log("Server response:",data);
-  })
-  .catch(err=>console.error("Error sending items:",err));
-}
-
-const sendBtn=document.createElement("button");
-sendBtn.textContent="Submit Selected Items";
-sendBtn.style.marginTop="12px";
-sendBtn.onclick=sendToServer;
-document.body.appendChild(sendBtn);
-
     function render(filterText=''){
       tbody.innerHTML='';
       const f=filterText.trim().toLowerCase();
       for(const [item,materials] of Object.entries(crafted_item_lookup)){
-        const haystack=item.toLowerCase() + ' ' + Object.keys(materials).join(' ').toLowerCase();
-        if(!f || haystack.includes(f)){
-          addRow(item,materials);
-        }
+        const haystack=item.toLowerCase()+' '+Object.keys(materials).join(' ').toLowerCase();
+        if(!f || haystack.includes(f)) addRow(item,materials);
       }
     }
 
     render();
-    filterInput.addEventListener('keydown',(e)=>{
-      if(e.key==='Enter') render(filterInput.value);
+    filterInput.addEventListener('keydown',(e)=>{ if(e.key==='Enter') render(filterInput.value); });
+
+    document.getElementById('goToGathering').addEventListener('click',()=>{
+      if(addedItems.size===0){ alert('Please add at least one item before proceeding.'); return; }
+      const itemsArray=Array.from(addedItems);
+      fetch('/set_gathering',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({selected_items: itemsArray})
+      }).then(res=>{ if(res.redirected) window.location.href=res.url; });
     });
   </script>
 </body>
