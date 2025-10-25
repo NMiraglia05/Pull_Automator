@@ -46,78 +46,81 @@
   </form>
 
 <script>
-const rowsContainer = document.getElementById('rowsContainer');
-const form = document.getElementById('rowsForm');
-const selectedBox = document.getElementById('selected-box');
+const rowsContainer=document.getElementById('rowsContainer');
+const form=document.getElementById('rowsForm');
+const selectedBox=document.getElementById('selected-box');
 
 // Load selected items from Flask
-const selectedItems = {{ selected_items|tojson }};
-if(selectedItems.length > 0){
-  selectedBox.innerHTML = '';
-  selectedItems.forEach(item => {
-    const div = document.createElement('div');
-    div.textContent = item;
+const selectedItems={{ selected_items|tojson }};
+if(selectedItems.length>0){
+  selectedBox.innerHTML='';
+  selectedItems.forEach(item=>{
+    const div=document.createElement('div');
+    div.textContent=item;
     selectedBox.appendChild(div);
   });
 }
 
 // Populate select dropdowns
-function buildOptions(selectEl, start, end, defaultVal=0){
-  selectEl.innerHTML = '';
-  for(let i=start; i<=end; i++){
-    const opt = document.createElement('option'); 
-    opt.value = i; 
-    opt.textContent = i;
-    if(i === defaultVal) opt.selected = true;
+function buildOptions(selectEl,start,end,defaultVal=0){
+  selectEl.innerHTML='';
+  for(let i=start;i<=end;i++){
+    const opt=document.createElement('option'); 
+    opt.value=i; 
+    opt.textContent=i;
+    if(i===defaultVal) opt.selected=true;
     selectEl.appendChild(opt);
   }
 }
 
-const row = rowsContainer.querySelector('.row');
-const merc = row.querySelector('select[name="mercantile"]');
-const bm = row.querySelector('select[name="black_market"]');
-const hunting = row.querySelector('select[name="hunting"]');
-const mining = row.querySelector('select[name="mining"]');
-const cargo = row.querySelector('select[name="cargo_ship"]');
+const row=rowsContainer.querySelector('.row');
+const merc=row.querySelector('select[name="mercantile"]');
+const bm=row.querySelector('select[name="black_market"]');
+const hunting=row.querySelector('select[name="hunting"]');
+const mining=row.querySelector('select[name="mining"]');
+const cargo=row.querySelector('select[name="cargo_ship"]');
 
-[merc, bm, hunting, mining].forEach(s => buildOptions(s, 0, 4, 0));
-buildOptions(cargo, 0, 10, 0);
+[merc,bm,hunting,mining].forEach(s=>buildOptions(s,0,4,0));
+buildOptions(cargo,0,10,0);
 
 // Submit handler sends data to Flask
-form.addEventListener('submit', async e => {
+form.addEventListener('submit',async e=>{
   e.preventDefault();
 
-  const inp = row.querySelector('input[name="character_name"]');
+  const inp=row.querySelector('input[name="character_name"]');
   if(!inp.value.trim()){ 
-    inp.focus(); 
     alert('Please fill in the character name before submitting.'); 
+    inp.focus(); 
     return; 
   }
 
-  const character_data = {
-    character_name: inp.value.trim(),
+  const character_data={
+    character_name:inp.value.trim(),
     gathering_skills:{
-    mercantile: Number(merc.value),
-    black_market: Number(bm.value),
-    hunting: Number(hunting.value),
-    mining: Number(mining.value),
-    cargo_ship: Number(cargo.value)}
+      mercantile:Number(merc.value),
+      black_market:Number(bm.value),
+      hunting:Number(hunting.value),
+      mining:Number(mining.value),
+      cargo_ship:Number(cargo.value)
+    }
   };
 
-  const payload = {
-    selected_items: selectedItems,
-    character_data: character_data
+  const payload={
+    selected_items:selectedItems,
+    character_data:character_data
   };
 
-  const response = await fetch("/submit_gathering", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(payload)
+  // Instead of expecting JSON, we load the rendered HTML page returned by Flask
+  const response=await fetch("/submit_gathering",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(payload)
   });
 
-  const result = await response.json();
-  console.log("Server response:", result);
-  alert("Data sent to server successfully! Check console for printed output.");
+  const html=await response.text();
+  document.open();
+  document.write(html);
+  document.close();
 });
 </script>
 </body>
