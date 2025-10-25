@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Character Row</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:24px;background:#f7fafc;color:#0f172a}
+    h1{font-size:1.25rem;margin-bottom:8px}
+    h2{font-size:1.1rem;margin-top:16px;margin-bottom:6px}
+    .note{font-size:0.95rem;margin-bottom:12px;color:#334155}
+    button{background:#0ea5a4;border:none;color:white;padding:8px 12px;border-radius:8px;cursor:pointer}
+    .rows{display:flex;flex-direction:column;gap:10px}
+    .row{display:grid;grid-template-columns:200px repeat(5,120px);gap:8px;padding:10px;border-radius:8px;background:white;align-items:center}
+    .row label{display:block;font-size:0.8rem;color:#475569}
+    .row input[type=text]{width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:6px}
+    select{width:100%;padding:8px;border-radius:6px;border:1px solid #e2e8f0}
+    .actions{margin-top:14px}
+    #selected-box{border:1px solid #ccc;border-radius:8px;padding:10px;background:#fafafa;min-height:50px;margin-bottom:18px}
+  </style>
+</head>
+<body>
+  <h1>Character Row Setup</h1>
+  <p class="note">Fill in your character’s stats and cargo ship count, then submit.</p>
+
+  <h2>Selected Items</h2>
+  <div id="selected-box">(none)</div>
+
+  <form id="rowsForm">
+    <div class="rows" id="rowsContainer">
+      <div class="row">
+        <div>
+          <label>Character name</label>
+          <input type="text" name="character_name" required minlength="1" placeholder="Enter name" />
+        </div>
+        <div><label>Mercantile</label><select name="mercantile"></select></div>
+        <div><label>Black Market</label><select name="black_market"></select></div>
+        <div><label>Hunting</label><select name="hunting"></select></div>
+        <div><label>Mining</label><select name="mining"></select></div>
+        <div><label>Cargo ship</label><select name="cargo_ship"></select></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button type="submit">Submit</button>
+    </div>
+  </form>
+
+  <script>
+    const rowsContainer=document.getElementById('rowsContainer');
+    const form=document.getElementById('rowsForm');
+    const selectedBox=document.getElementById('selected-box');
+
+    // Flask will pass selected_items variable
+    const selectedItems={{ selected_items|tojson }};
+    if(selectedItems.length>0){
+      selectedBox.innerHTML='';
+      selectedItems.forEach(item=>{
+        const div=document.createElement('div'); div.textContent=item;
+        selectedBox.appendChild(div);
+      });
+    }
+
+    function buildOptions(selectEl,start,end,defaultVal=0){
+      selectEl.innerHTML='';
+      for(let i=start;i<=end;i++){
+        const opt=document.createElement('option'); opt.value=i; opt.textContent=i;
+        if(i===defaultVal) opt.selected=true;
+        selectEl.appendChild(opt);
+      }
+    }
+
+    const row=rowsContainer.querySelector('.row');
+    const merc=row.querySelector('select[name="mercantile"]');
+    const bm=row.querySelector('select[name="black_market"]');
+    const hunting=row.querySelector('select[name="hunting"]');
+    const mining=row.querySelector('select[name="mining"]');
+    const cargo=row.querySelector('select[name="cargo_ship"]');
+
+    [merc,bm,hunting,mining].forEach(s=>buildOptions(s,0,4,0));
+    buildOptions(cargo,0,10,0);
+
+    form.addEventListener('submit',e=>{
+      e.preventDefault();
+      const inp=row.querySelector('input[name="character_name"]');
+      if(!inp.value.trim()){ inp.focus(); alert('Please fill in the character name before submitting.'); return; }
+      const data={
+        character_name:inp.value.trim(),
+        mercantile:Number(merc.value),
+        black_market:Number(bm.value),
+        hunting:Number(hunting.value),
+        mining:Number(mining.value),
+        cargo_ship:Number(cargo.value),
+        selected_items:selectedItems
+      };
+      console.log('Final dictionary:',data);
+      alert('Data packaged successfully! Check console.');
+    });
+  </script>
+</body>
+</html>
