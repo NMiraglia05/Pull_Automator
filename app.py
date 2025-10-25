@@ -362,5 +362,7 @@ def submit_gathering():
     pull_schedule = ass.pulls
     not_pulled = dict(ass.ineligible_pulls)
 
+    print('skibbidi')
+    
     return render_template("display_orders.html", pull_schedule=pull_schedule, not_pulled=not_pulled)
 
