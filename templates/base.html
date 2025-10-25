@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{% block title %}Pull Automator{% endblock %}</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      background: #f7fafc;
+      color: #0f172a;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    main {
+      flex: 1;
+      padding: 24px;
+    }
+    footer {
+      text-align: center;
+      padding: 10px;
+      background: #0ea5a4;
+      color: white;
+      font-size: 0.9rem;
+      border-top: 2px solid #08918f;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    version: 0.1.0 — Made by Azure
+  </footer>
+</body>
+</html>
