@@ -331,8 +331,13 @@ class PullingPlanner:
         orders=dict(Counter(order_mats))
         return orders
 
-@app.route("/select_items", methods=["POST"])
+@app.route("/select_items")
 def select_items():
+    # just load the item selection page
+    return render_template("select_items.html")
+
+@app.route("/submit_items", methods=["POST"])
+def submit_items():
     data = request.get_json()
     selected_items = data.get("selected_items", [])
     # Render the set_gathering page immediately with the selected items
