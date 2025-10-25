@@ -336,12 +336,6 @@ class PullingPlanner:
 def select_items():
     return render_template("select_items.html")
 
-@app.route("/submit_items", methods=["POST"])
-def submit_items():
-    data=request.get_json()
-    selected=data.get("selected", [])
-    print("Selected crafted items:", selected)
-
 @app.route("/set_gathering")
 def set_gathering():
     # Get selected items from session
