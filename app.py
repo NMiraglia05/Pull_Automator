@@ -1,5 +1,8 @@
+from flask import Flask, render_template, request, jsonify
 from collections import Counter
 import copy
+
+app=Flask(__name__)
 
 pivoted_items = {
     'mining': {
@@ -327,3 +330,14 @@ class PullingPlanner:
                     order_mats.append(mat)
         orders=dict(Counter(order_mats))
         return orders
+
+
+@app.route("/select_items")
+def select_items():
+    return render_template("select_items.html")
+
+@app.route("/submit_items", methods=["POST"])
+def submit_items():
+    data=request.get_json()
+    selected=data.get("selected", [])
+    print("Selected crafted items:", selected)
