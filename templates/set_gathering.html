@@ -96,11 +96,12 @@ form.addEventListener('submit', async e => {
 
   const character_data = {
     character_name: inp.value.trim(),
+    gathering_skills:{
     mercantile: Number(merc.value),
     black_market: Number(bm.value),
     hunting: Number(hunting.value),
     mining: Number(mining.value),
-    cargo_ship: Number(cargo.value)
+    cargo_ship: Number(cargo.value)}
   };
 
   const payload = {
