@@ -357,13 +357,10 @@ def submit_gathering():
     selected_items = data.get("selected_items", [])
     character_data = data.get("character_data", {})
 
-    ass=PullingPlanner(character_data,selected_items)
+    ass = PullingPlanner(character_data, selected_items)
 
-    pull_schedule=ass.pulls
-    not_pulled=dict(ass.ineligible_pulls)
+    pull_schedule = ass.pulls
+    not_pulled = dict(ass.ineligible_pulls)
 
-    print(pull_schedule)
-    print('\n\n')
-    print(not_pulled)
-    
-    return jsonify({"status": "success"})
+    return render_template("display_orders.html", pull_schedule=pull_schedule, not_pulled=not_pulled)
+
