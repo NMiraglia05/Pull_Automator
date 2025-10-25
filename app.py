@@ -343,6 +343,7 @@ def set_gathering():
         selected_items = data.get("selected_items", [])
     else:
         selected_items = []
+    print(selected_items)
     return render_template("set_gathering.html", selected_items=selected_items)
 
 @app.route("/submit_items", methods=["POST"])
