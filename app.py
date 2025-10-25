@@ -360,7 +360,7 @@ def submit_gathering():
     ass=PullingPlanner(character_data,selected_items)
 
     pull_schedule=ass.pulls
-    not_pulled=ass.ineligible_pulls
+    not_pulled=dict(ass.ineligible_pulls)
 
     print(pull_schedule)
     print('\n\n')
