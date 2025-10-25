@@ -364,6 +364,6 @@ def submit_gathering():
 
     print(pull_schedule)
     print('\n\n')
-    print(not_pulled_)
+    print(not_pulled)
     
     return jsonify({"status": "success"})
