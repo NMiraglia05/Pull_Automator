@@ -45,56 +45,55 @@
     </div>
   </form>
 
-  <script>
-    const rowsContainer=document.getElementById('rowsContainer');
-    const form=document.getElementById('rowsForm');
-    const selectedBox=document.getElementById('selected-box');
+<script>
+const rowsContainer=document.getElementById('rowsContainer');
+const form=document.getElementById('rowsForm');
+const selectedBox=document.getElementById('selected-box');
 
-    // Flask will pass selected_items variable
-    const selectedItems={{ selected_items|tojson }};
-    if(selectedItems.length>0){
-      selectedBox.innerHTML='';
-      selectedItems.forEach(item=>{
-        const div=document.createElement('div'); div.textContent=item;
-        selectedBox.appendChild(div);
-      });
-    }
+const selectedItems={{ selected_items|tojson }};
+if(selectedItems.length>0){
+  selectedBox.innerHTML='';
+  selectedItems.forEach(item=>{
+    const div=document.createElement('div'); div.textContent=item;
+    selectedBox.appendChild(div);
+  });
+}
 
-    function buildOptions(selectEl,start,end,defaultVal=0){
-      selectEl.innerHTML='';
-      for(let i=start;i<=end;i++){
-        const opt=document.createElement('option'); opt.value=i; opt.textContent=i;
-        if(i===defaultVal) opt.selected=true;
-        selectEl.appendChild(opt);
-      }
-    }
+function buildOptions(selectEl,start,end,defaultVal=0){
+  selectEl.innerHTML='';
+  for(let i=start;i<=end;i++){
+    const opt=document.createElement('option'); opt.value=i; opt.textContent=i;
+    if(i===defaultVal) opt.selected=true;
+    selectEl.appendChild(opt);
+  }
+}
 
-    const row=rowsContainer.querySelector('.row');
-    const merc=row.querySelector('select[name="mercantile"]');
-    const bm=row.querySelector('select[name="black_market"]');
-    const hunting=row.querySelector('select[name="hunting"]');
-    const mining=row.querySelector('select[name="mining"]');
-    const cargo=row.querySelector('select[name="cargo_ship"]');
+const row=rowsContainer.querySelector('.row');
+const merc=row.querySelector('select[name="mercantile"]');
+const bm=row.querySelector('select[name="black_market"]');
+const hunting=row.querySelector('select[name="hunting"]');
+const mining=row.querySelector('select[name="mining"]');
+const cargo=row.querySelector('select[name="cargo_ship"]');
 
-    [merc,bm,hunting,mining].forEach(s=>buildOptions(s,0,4,0));
-    buildOptions(cargo,0,10,0);
+[merc,bm,hunting,mining].forEach(s=>buildOptions(s,0,4,0));
+buildOptions(cargo,0,10,0);
 
-    form.addEventListener('submit',e=>{
-      e.preventDefault();
-      const inp=row.querySelector('input[name="character_name"]');
-      if(!inp.value.trim()){ inp.focus(); alert('Please fill in the character name before submitting.'); return; }
-      const data={
-        character_name:inp.value.trim(),
-        mercantile:Number(merc.value),
-        black_market:Number(bm.value),
-        hunting:Number(hunting.value),
-        mining:Number(mining.value),
-        cargo_ship:Number(cargo.value),
-        selected_items:selectedItems
-      };
-      console.log('Final dictionary:',data);
-      alert('Data packaged successfully! Check console.');
-    });
-  </script>
+form.addEventListener('submit',e=>{
+  e.preventDefault();
+  const inp=row.querySelector('input[name="character_name"]');
+  if(!inp.value.trim()){ inp.focus(); alert('Please fill in the character name before submitting.'); return; }
+  const data={
+    character_name:inp.value.trim(),
+    mercantile:Number(merc.value),
+    black_market:Number(bm.value),
+    hunting:Number(hunting.value),
+    mining:Number(mining.value),
+    cargo_ship:Number(cargo.value),
+    selected_items:selectedItems
+  };
+  console.log('Final dictionary:',data);
+  alert('Data packaged successfully! Check console.');
+});
+</script>
 </body>
 </html>
