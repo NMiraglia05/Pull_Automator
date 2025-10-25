@@ -333,22 +333,18 @@ class PullingPlanner:
 
 @app.route("/select_items")
 def select_items():
-    # just load the item selection page
     return render_template("select_items.html")
 
 @app.route("/submit_items", methods=["POST"])
 def submit_items():
-    data = request.get_json()
-    selected_items = data.get("selected_items", [])
-    # Render the set_gathering page immediately with the selected items
-    return render_template("set_gathering.html", selected_items=selected_items)
+    selected_items = request.json.get("selected_items", [])
+    # Instead of rendering, store in query params and redirect
+    # (safer than trying to render with fetch)
+    items_str = ",".join(selected_items)
+    return {"redirect": url_for("set_gathering", items=items_str)}
 
-@app.route("/set_gathering", methods=["GET", "POST"])
+@app.route("/set_gathering")
 def set_gathering():
-    if request.method == "POST":
-        data = request.get_json()
-        selected_items = data.get("selected_items", [])
-    else:
-        selected_items = []
-    print(selected_items)
+    items_param = request.args.get("items", "")
+    selected_items = items_param.split(",") if items_param else []
     return render_template("set_gathering.html", selected_items=selected_items)
