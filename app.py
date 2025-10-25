@@ -348,3 +348,14 @@ def set_gathering():
     items_param = request.args.get("items", "")
     selected_items = items_param.split(",") if items_param else []
     return render_template("set_gathering.html", selected_items=selected_items)
+
+@app.route("/submit_gathering", methods=["POST"])
+def submit_gathering():
+    data = request.get_json()
+    selected_items = data.get("selected_items", [])
+    character_data = data.get("character_data", {})
+    
+    print("Selected items:", selected_items)
+    print("Character data:", character_data)
+    
+    return jsonify({"status": "success"})
