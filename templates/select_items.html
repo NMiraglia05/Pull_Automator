@@ -1,24 +1,44 @@
-{% extends "template.html" %}
-{% block title %}Crafted Items Menu{% endblock %}
 
-{% block content %}
-<h1>Crafted Items Menu</h1>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Crafted Items Menu</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:24px}
+    h1{font-size:1.6rem;margin-bottom:12px}
+    h2{font-size:1.3rem;margin-top:28px;margin-bottom:6px}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{padding:8px 10px;border:1px solid #ddd;text-align:left;vertical-align:top}
+    th{background:#f4f4f4}
+    .materials{white-space:pre-wrap;font-family:inherit}
+    .search{margin-bottom:12px;padding:8px;width:100%;max-width:360px}
+    button{padding:4px 8px;border:1px solid #bbb;border-radius:6px;background:#f9f9f9;cursor:pointer;transition:background 0.2s}
+    button:hover{background:#e9e9e9}
+    #added-box{border:1px solid #ccc;border-radius:8px;padding:10px;background:#fafafa;min-height:50px;margin-bottom:18px}
+    .added-item{padding:3px 0}
+    .actions{margin-top:12px}
+  </style>
+</head>
+<body>
+  <h1>Crafted Items Menu</h1>
 
-<h2>Added Crafts</h2>
-<div id="added-box">(none yet)</div>
+  <h2>Added Crafts</h2>
+  <div id="added-box">(none yet)</div>
 
-<input id="filter" class="search" placeholder="Filter by item or material (type and press Enter)" />
+  <input id="filter" class="search" placeholder="Filter by item or material (type and press Enter)" />
 
-<table id="menu">
-  <thead>
-    <tr><th>Item</th><th>Materials (name: qty)</th><th>Action</th></tr>
-  </thead>
-  <tbody></tbody>
-</table>
+  <table id="menu">
+    <thead>
+      <tr><th>Item</th><th>Materials (name: qty)</th><th>Action</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-<div class="actions">
-  <button id="goToGathering">Proceed to Character Setup</button>
-</div>
+  <div class="actions">
+    <button id="goToGathering">Proceed to Character Setup</button>
+  </div>
 
 <script>
 const crafted_item_lookup = {
@@ -91,4 +111,5 @@ document.getElementById("goToGathering").addEventListener("click", async () => {
   window.location.href = data.redirect;
 });
 </script>
-{% endblock %}
+</body>
+</html>
