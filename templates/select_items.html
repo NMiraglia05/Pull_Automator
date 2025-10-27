@@ -37,7 +37,7 @@
   </div>
 
 <script>
-const crafted_item_lookup = {
+const crafted_item_lookup={
     "Blacksmithing":{
         "Animal Traps":{"iron":3},
         "Cooking Pot":{"copper":3,"wood (strong+durable)":1},
@@ -190,51 +190,46 @@ const crafted_item_lookup = {
     }
 };
 
-const container = document.getElementById('tables');
-const addedBox = document.getElementById('added-box');
-const filterInput = document.getElementById('filter');
-const addedItems = new Set();
+const container=document.getElementById('tables');
+const addedBox=document.getElementById('added-box');
+const filterInput=document.getElementById('filter');
+const addedItems=new Set();
 
 function formatMaterials(matObj){
-    return Object.entries(matObj).map(([name,qty]) => `${name}: ${qty}`).join('\n');
+    return Object.entries(matObj).map(([name,qty])=>`${name}: ${qty}`).join('\n');
 }
 
 function renderTables(filterText=''){
     container.innerHTML='';
-    const f = filterText.trim().toLowerCase();
+    const f=filterText.trim().toLowerCase();
 
     for(const [category,items] of Object.entries(crafted_item_lookup)){
-        const section = document.createElement('section');
-        const title = document.createElement('h2');
-        title.textContent = category;
+        const section=document.createElement('section');
+        const title=document.createElement('h2');
+        title.textContent=category;
         section.appendChild(title);
 
-        const table = document.createElement('table');
-        const thead = document.createElement('thead');
-        thead.innerHTML = '<tr><th>Item</th><th>Materials (name: qty)</th><th>Action</th></tr>';
-        const tbody = document.createElement('tbody');
+        const table=document.createElement('table');
+        const thead=document.createElement('thead');
+        thead.innerHTML='<tr><th>Item</th><th>Materials (name: qty)</th><th>Action</th></tr>';
+        const tbody=document.createElement('tbody');
 
         for(const [item,materials] of Object.entries(items)){
-            const haystack = item.toLowerCase() + ' ' + Object.keys(materials).join(' ').toLowerCase();
-            if(!f || haystack.includes(f)){
-                const tr = document.createElement('tr');
-                const tdItem = document.createElement('td');
-                tdItem.textContent = item;
-                const tdMats = document.createElement('td');
-                tdMats.className = 'materials';
-                tdMats.textContent = formatMaterials(materials);
-                const tdAction = document.createElement('td');
-                const btn = document.createElement('button');
-                btn.textContent = 'Add';
-                btn.onclick = () => handleAdd(item);
+            const haystack=item.toLowerCase()+' '+Object.keys(materials).join(' ').toLowerCase();
+            if(!f||haystack.includes(f)){
+                const tr=document.createElement('tr');
+                const tdItem=document.createElement('td');tdItem.textContent=item;
+                const tdMats=document.createElement('td');tdMats.className='materials';tdMats.textContent=formatMaterials(materials);
+                const tdAction=document.createElement('td');
+                const btn=document.createElement('button');btn.textContent='Add';btn.onclick=()=>handleAdd(item);
                 tdAction.appendChild(btn);
-                tr.append(tdItem, tdMats, tdAction);
+                tr.append(tdItem,tdMats,tdAction);
                 tbody.appendChild(tr);
             }
         }
 
-        if(tbody.children.length > 0){
-            table.append(thead, tbody);
+        if(tbody.children.length>0){
+            table.append(thead,tbody);
             section.appendChild(table);
             container.appendChild(section);
         }
@@ -254,51 +249,56 @@ function handleRemove(item){
 }
 
 function renderAdded(){
-    if(addedItems.size === 0){
-        addedBox.innerHTML = '(none yet)';
+    if(addedItems.size===0){
+        addedBox.innerHTML='(none yet)';
         return;
     }
-    addedBox.innerHTML = '';
+    addedBox.innerHTML='';
     for(const item of addedItems){
-        const div = document.createElement('div');
-        div.className = 'added-item';
-        div.textContent = item;
-        const removeBtn = document.createElement('button');
-        removeBtn.textContent = 'Remove';
-        removeBtn.className = 'remove-btn';
-        removeBtn.onclick = () => handleRemove(item);
+        const div=document.createElement('div');
+        div.className='added-item';
+        const span=document.createElement('span');
+        span.textContent=item;
+        const removeBtn=document.createElement('button');
+        removeBtn.textContent='Remove';
+        removeBtn.className='remove-btn';
+        removeBtn.onclick=()=>handleRemove(item);
+        div.appendChild(span);
         div.appendChild(removeBtn);
         addedBox.appendChild(div);
     }
 }
 
-filterInput.addEventListener('keydown', e => {
-    if(e.key === 'Enter') renderTables(filterInput.value);
-});
+filterInput.addEventListener('keydown',e=>{if(e.key==='Enter')renderTables(filterInput.value)});
+renderTables();
 
-document.getElementById("goToGathering").addEventListener("click", async () => {
-    const selected = Array.from(addedItems);
-    if(selected.length === 0){
+document.getElementById("goToGathering").addEventListener("click",async()=>{
+    const selected=Array.from(addedItems);
+    if(selected.length===0){
         alert("Please add at least one craft before proceeding.");
         return;
     }
     try{
-        const res = await fetch("/api/set_items", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({selected})
+        const res=await fetch("/submit_items",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({selected_items: selected})
         });
-        if(res.ok) {
-            window.location.href = "/set_gathering";
-        } else {
-            alert("Error saving data.");
+        if(res.ok){
+            const data=await res.json();
+            if(data.redirect){
+                window.location.href=data.redirect;
+            }else{
+                alert("No redirect URL received from server.");
+            }
+        }else{
+            alert("Error saving data. Server returned: "+res.status);
         }
-    } catch(err) {
+    }catch(err){
+        console.error("Error:",err);
         alert("Failed to connect to server.");
     }
 });
-
-renderTables();
 </script>
 </body>
 </html>
