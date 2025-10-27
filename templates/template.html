@@ -1,52 +1,44 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>{% block title %}Pull Automator{% endblock %}</title>
-  <style>
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      margin: 0;
-      background: #f7fafc;
-      color: #0f172a;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    main {
-      flex: 1;
-      padding: 24px;
-    }
-    h1{font-size:1.25rem;margin-bottom:8px}
-    h2{font-size:1.1rem;margin-top:16px;margin-bottom:6px}
-    .note{font-size:0.95rem;margin-bottom:12px;color:#334155}
-    button{background:#0ea5a4;border:none;color:white;padding:8px 12px;border-radius:8px;cursor:pointer}
-    .rows{display:flex;flex-direction:column;gap:10px}
-    .row{display:grid;grid-template-columns:200px repeat(5,120px);gap:8px;padding:10px;border-radius:8px;background:white;align-items:center}
-    .row label{display:block;font-size:0.8rem;color:#475569}
-    .row input[type=text]{width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:6px}
-    select{width:100%;padding:8px;border-radius:6px;border:1px solid #e2e8f0}
-    .actions{margin-top:14px}
-    #selected-box{border:1px solid #ccc;border-radius:8px;padding:10px;background:#fafafa;min-height:50px;margin-bottom:18px}
-    footer {
-      text-align: center;
-      padding: 12px 0;
-      background: #0ea5a4;
-      color: white;
-      font-size: 0.85rem;
-      border-top: 1px solid #0ca99c;
-    }
-  </style>
-  {% block head %}{% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block head %}{% endblock %}
+    <style>
+        .global-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: aquamarine;
+            color: white;
+            padding: 12px 24px;
+            font-size: 0.9rem;
+            z-index: 1000;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .global-footer a {
+            color: white;
+            text-decoration: none;
+        }
+        .global-footer a:hover {
+            text-decoration: underline;
+        }
+        body {
+            padding-bottom: 60px;
+        }
+    </style>
 </head>
 <body>
-  <main>
     {% block content %}{% endblock %}
-  </main>
-
-  <footer>
-    version: 0.1.0 Made by Azure
-  </footer>
+    
+    <div class="global-footer">
+        <div>Pull Scheduler 0.2.0</div>
+        <div>Built by Azure</div>
+        <div><a href="https://github.com/AzureFennec/Pull_Automator" target="_blank">Source Code</a></div>
+    </div>
 </body>
 </html>
