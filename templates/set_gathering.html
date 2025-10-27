@@ -1,31 +1,69 @@
-{% extends "template.html" %}
-{% block title %}Character Row{% endblock %}
 
-{% block content %}
-<h1>Character Row Setup</h1>
-<p class="note">Fill in your character’s stats and cargo ship count, then submit.</p>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Character Row</title>
+  <style>
+    body {
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      margin:24px;
+      background:#f7fafc;
+      color:#0f172a;
+      position: relative;
+      min-height: 100vh;
+    }
+    h1{font-size:1.25rem;margin-bottom:8px}
+    h2{font-size:1.1rem;margin-top:16px;margin-bottom:6px}
+    .note{font-size:0.95rem;margin-bottom:12px;color:#334155}
+    button{background:#0ea5a4;border:none;color:white;padding:8px 12px;border-radius:8px;cursor:pointer}
+    .rows{display:flex;flex-direction:column;gap:10px}
+    .row{display:grid;grid-template-columns:200px repeat(5,120px);gap:8px;padding:10px;border-radius:8px;background:white;align-items:center}
+    .row label{display:block;font-size:0.8rem;color:#475569}
+    .row input[type=text]{width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:6px}
+    select{width:100%;padding:8px;border-radius:6px;border:1px solid #e2e8f0}
+    .actions{margin-top:14px}
+    #selected-box{border:1px solid #ccc;border-radius:8px;padding:10px;background:#fafafa;min-height:50px;margin-bottom:18px}
+    footer {
+      width: 100%;
+      padding: 12px 0;
+      text-align: center;
+      font-size: 0.85rem;
+      color: white;
+      background: #0ea5a4; /* aquamarine */
+      border-top: 1px solid #0ca99c;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Character Row Setup</h1>
+  <p class="note">Fill in your character’s stats and cargo ship count, then submit.</p>
 
-<h2>Selected Items</h2>
-<div id="selected-box">(none)</div>
+  <h2>Selected Items</h2>
+  <div id="selected-box">(none)</div>
 
-<form id="rowsForm">
-  <div class="rows" id="rowsContainer">
-    <div class="row">
-      <div>
-        <label>Character name</label>
-        <input type="text" name="character_name" required minlength="1" placeholder="Enter name" />
+  <form id="rowsForm">
+    <div class="rows" id="rowsContainer">
+      <div class="row">
+        <div>
+          <label>Character name</label>
+          <input type="text" name="character_name" required minlength="1" placeholder="Enter name" />
+        </div>
+        <div><label>Mercantile</label><select name="mercantile"></select></div>
+        <div><label>Black Market</label><select name="black_market"></select></div>
+        <div><label>Hunting</label><select name="hunting"></select></div>
+        <div><label>Mining</label><select name="mining"></select></div>
+        <div><label>Cargo ship</label><select name="cargo_ship"></select></div>
       </div>
-      <div><label>Mercantile</label><select name="mercantile"></select></div>
-      <div><label>Black Market</label><select name="black_market"></select></div>
-      <div><label>Hunting</label><select name="hunting"></select></div>
-      <div><label>Mining</label><select name="mining"></select></div>
-      <div><label>Cargo ship</label><select name="cargo_ship"></select></div>
     </div>
-  </div>
-  <div class="actions">
-    <button type="submit">Submit</button>
-  </div>
-</form>
+    <div class="actions">
+      <button type="submit">Submit</button>
+    </div>
+  </form>
 
 <script>
 const rowsContainer=document.getElementById('rowsContainer');
@@ -104,4 +142,9 @@ form.addEventListener('submit',async e=>{
   document.close();
 });
 </script>
-{% endblock %}
+
+<footer>
+  version: 0.1.0 Made by Azure
+</footer>
+</body>
+</html>
