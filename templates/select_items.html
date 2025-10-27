@@ -1,28 +1,26 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Crafted Items Menu</title>
-<style>
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:24px}
-  h1{font-size:1.6rem;margin-bottom:12px}
-  h2.section-title{font-size:1.3rem;margin-top:28px;margin-bottom:6px;text-align:left}
-  table{width:100%;border-collapse:collapse;margin-top:8px;margin-bottom:28px}
-  th,td{padding:8px 10px;border:1px solid #ddd;text-align:left;vertical-align:top}
-  th{background:#f4f4f4}
-  .materials{white-space:pre-wrap;font-family:inherit}
-  .search{margin-bottom:12px;padding:8px;width:100%;max-width:360px}
-  button{padding:4px 8px;border:1px solid #bbb;border-radius:6px;background:#f9f9f9;cursor:pointer;transition:background 0.2s}
-  button:hover{background:#e9e9e9}
-  #added-box{border:1px solid #ccc;border-radius:8px;padding:10px;background:#fafafa;min-height:50px;margin-bottom:18px}
-  .added-item{display:flex;justify-content:space-between;align-items:center;padding:3px 0}
-  .added-item .name{flex:1}
-  .remove-btn{margin-left:10px;background:#ffdfe0;border:1px solid #f8a7a9}
-  .remove-btn:hover{background:#ffcfd1}
-  .actions{margin-top:12px}
-  .debug{margin-top:10px;font-size:0.9rem;color:#7a7a7a}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Crafted Items Menu</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:24px}
+    h1{font-size:1.6rem;margin-bottom:12px}
+    h2{font-size:1.3rem;margin-top:28px;margin-bottom:6px;text-align:left}
+    table{width:100%;border-collapse:collapse;margin-top:8px;margin-bottom:28px}
+    th,td{padding:8px 10px;border:1px solid #ddd;text-align:left;vertical-align:top}
+    th{background:#f4f4f4}
+    .materials{white-space:pre-wrap;font-family:inherit}
+    .search{margin-bottom:12px;padding:8px;width:100%;max-width:360px}
+    button{padding:4px 8px;border:1px solid #bbb;border-radius:6px;background:#f9f9f9;cursor:pointer;transition:background 0.2s}
+    button:hover{background:#e9e9e9}
+    #added-box{border:1px solid #ccc;border-radius:8px;padding:10px;background:#fafafa;min-height:50px;margin-bottom:18px}
+    .added-item{display:flex;justify-content:space-between;align-items:center;padding:3px 0}
+    .remove-btn{margin-left:10px;background:#f8d7da;border-color:#f5c2c7}
+    .remove-btn:hover{background:#f1b0b7}
+    .actions{margin-top:12px}
+  </style>
 </head>
 <body>
   <h1>Crafted Items Menu</h1>
@@ -38,222 +36,269 @@
     <button id="goToGathering">Proceed to Character Setup</button>
   </div>
 
-  <div class="debug" id="debug"></div>
-
 <script>
-/* ---------- data ---------- */
-/* (replace/extend this object with your full dictionary if needed) */
 const crafted_item_lookup = {
-  "Blacksmithing": {
-    "Animal Traps": {"iron":3},
-    "Cooking Pot": {"copper":3,"wood (strong+durable)":1},
-    "Gardener's Tools": {"iron":2,"wood (strong+durable)":1},
-    "Mason's Chisel": {"iron":3,"wood (strong+durable)":1},
-    "Surgeon's Razor": {"silver":1,"herb (purification)":1},
-    "Surgeon's Needle": {"silver":1,"cloth":1},
-    "Repair Tools": {"iron":3,"wood (strong+durable)":1},
-    "Masterwork Tools": {"iron":2,"cloth":1,"wood (strong+durable)":1},
-    "Whetstone": {"stone":4},
-    "Throwing Snare": {"stone":3,"cloth":3,"soft pelt":1},
-    "Music Box": {"copper":3,"gold":1,"bone":1,"paper":1},
-    "Lasting": {"coal":1,"iron":1,"manganese":1}
-  },
-  "Weaponsmithing": {
-    "Iron": {"iron":3},
-    "Silver": {"silver":3,"sanctified water":1,"herb (purification)":3},
-    "Gold": {"gold":3,"sanctified water":1,"herb (purification)":3},
-    "Weapon-Casting": {"mercury":1,"silver":1,"herb (enhancement)":1},
-    "Battering": {"coal":1,"stone":1,"iron":1,"marble":1,"manganese":1,"herb (enchantment)":2,"herb (enhancement)":2},
-    "Massive": {"iron":4},
-    "Ambidextrous": {"mercury":2,"salt":2},
-    "Lasting": {"coal":1,"iron":1,"manganese":1},
-    "Crushing": {"stone":3,"iron":2,"marble":2,"manganese":1,"demon blood":1,"herb (enchantment)":2,"herb (enhancement)":2,"herb (entropic)":4},
-    "Elemental": {"coal":6,"mercury":2,"sulfur":2,"spell crystal":1,"herb (enhancement)":2,"herb (entropic)":3},
-    "Sentinel": {"salt":1,"iron":1,"manganese":1,"soul gem":1,"celestial blood":1,"sanctified water":1,"herb (enhancement)":2,"herb (stimulant)":2},
-    "Lethal": {"coal":2,"iron":2,"manganese":2},
-    "Life-Drinking": {"obsidian":1,"soul gem":1,"demon blood":1,"zye blood parasite":2,"herb (entropic)":4,"herb (spiritual)":4}
-  }
-  // add rest of your big dictionary here...
+    "Blacksmithing":{
+        "Animal Traps":{"iron":3},
+        "Cooking Pot":{"copper":3,"wood (strong+durable)":1},
+        "Gardener's Tools":{"iron":2,"wood (strong+durable)":1},
+        "Mason's Chisel":{"iron":3,"wood (strong+durable)":1},
+        "Surgeon's Razor":{"silver":1,"herb (purification)":1},
+        "Surgeon's Needle":{"silver":1,"cloth":1},
+        "Repair Tools":{"iron":3,"wood (strong+durable)":1},
+        "Masterwork Tools":{"iron":2,"cloth":1,"wood (strong+durable)":1},
+        "Whetstone":{"stone":4},
+        "Throwing Snare":{"stone":3,"cloth":3,"soft pelt":1},
+        "Music Box":{"copper":3,"gold":1,"bone":1,"paper":1},
+        "Lasting":{"coal":1,"iron":1,"manganese":1}
+    },
+    "Weaponsmithing":{
+        "Iron":{"iron":3},
+        "Silver":{"silver":3,"sanctified water":1,"herb (purification)":3},
+        "Gold":{"gold":3,"sanctified water":1,"herb (purification)":3},
+        "Weapon-Casting":{"mercury":1,"silver":1,"herb (enhancement)":1},
+        "Battering":{"coal":1,"stone":1,"iron":1,"marble":1,"manganese":1,"herb (enchantment)":2,"herb (enhancement)":2},
+        "Massive":{"iron":4},
+        "Ambidextrous":{"mercury":2,"salt":2},
+        "Lasting":{"coal":1,"iron":1,"manganese":1},
+        "Crushing":{"stone":3,"iron":2,"marble":2,"manganese":1,"demon blood":1,"herb (enchantment)":2,"herb (enhancement)":2,"herb (entropic)":4},
+        "Elemental":{"coal":6,"mercury":2,"sulfur":2,"spell crystal":1,"herb (enhancement)":2,"herb (entropic)":3},
+        "Sentinel":{"salt":1,"iron":1,"manganese":1,"soul gem":1,"celestial blood":1,"sanctified water":1,"herb (enhancement)":2,"herb (stimulant)":2},
+        "Lethal":{"coal":2,"iron":2,"manganese":2},
+        "Life-Drinking":{"obsidian":1,"soul gem":1,"demon blood":1,"zye blood parasite":2,"herb (entropic)":4,"herb (spiritual)":4}
+    },
+    "Armorsmithing":{
+        "Lasting":{"coal":1,"iron":1,"manganese":1},
+        "Reinforced":{"coal":2,"iron":2,"manganese":2},
+        "Spellcasting":{"quartz":1,"silver":1,"herb (enhancement)":1},
+        "Spirit Protection":{"coal":1,"mercury":2,"silver":2,"sanctified water":1,"herb (purification)":1},
+        "Glyph-Guarded":{"salt":1,"quartz":1,"ritual component":1,"herb (enhancement)":1},
+        "Physically Resistant": {"coal":4, "iron":2, "manganese":2},
+        "Wakethorn": {"obsidian":1, "bone":5, "herb (entropic)":3, "herb (stimulant)":3, "wood (flexible)":4},
+        "Mindshatter": {"quartz":2, "silver":2, "fae blood":1, "herb (hallucination)":3},
+        "Rageguard": {"mercury":3, "zye blood parasite":1, "herb (entropic)":3, "herb (stimulant)":3},
+        "Deathward": {"gold":1, "feather":4, "celestial blood":2, "sanctified water":2, "herb (rejuvenation)":3}
+    },
+    "Shieldsmithing":{
+        "Perfect Grip":{"iron":3,"soft pelt":1,"wood (flexible + durable)":1},
+        "Spellcasting":{"quartz":1,"silver":1,"herb (enhancement)":1},
+        "Savior":{"iron":1,"mercury":1,"manganese":1},
+        "Lasting":{"coal":1,"iron":1,"manganese":1},
+        "Unbreakable": {"salt":1, "quartz":1, "mercury":1, "ritual component":1, "herb (enhancement)":1},
+        "Elemental Blocking": {"mercury":1, "sulfur":1, "herb (enhancement)":1, "wood (dense + durable + strong)":1},
+        "Spell Reflecting": {"coal":1, "salt":1, "quartz":1, "copper":2, "manganese":1, "spell crystal":1, "herb (enhancement)":1},
+        "Anchor-Weight": {"coal":4, "iron":2, "manganese":2},
+        "Kinetic": {"salt":2, "sulfur":2, "obsidian":1, "wood (dense + flexible + strong)":2},
+        "Mirroring": {"silver":2, "glass":2, "sanctified water":1, "herb (purification)":3, "wood (durable + dense + lightweight)":1}
+    },
+    "Locksmithing":{
+        "Lock":{"coal":2,"iron":1,"manganese":1},
+        "Keys":{"iron":1,"silver":1,"gold":1},
+        "Lockpick":{"iron":1,"silver":1,"gold":1},
+        "Explosive Key":{"sulfur":2,"glass":1,"spell crystal":1,"herb (entropic)":1},
+        "Complex":{"iron":1},
+        "Iron Trap Mechanism":{"iron":3,"sulfur":1,"herb (entropic)":3},
+        "Silver Trap Mechanism":{"sulfur":1,"silver":3,"herb (entropic)":3},
+        "Gold Trap Mechanism":{"sulfur":1,"gold":3,"herb (entropic)":3},
+        "Glyph-Guarded":{"salt":1,"quartz":1,"mercury":1,"ritual component":1,"herb (enhancement)":1}
+    },
+    'Enchanting':{
+        "Secure Tome":{"quartz":1,"soft pelt":1,"herb (enchantment)":2,"herb (spiritual)":2,"wood (durable)":1,"paper":2},
+        "Traveling Spellbook or Scroll Case":{"quartz":1,"bone":2,"herb (enchantment)":2,"herb (spiritual)":2,"wood (flexible + lightweight)":1,"paper":2},
+        "Specialist's Spellbook or Scroll Case":{"quartz":1,"bone":2,"soft pelt":1,"herb (enchantment)":2,"herb (spiritual)":2,"wood (flexible + lightweight)":2,"paper":2},
+        "Master Spellbook or Scroll Case":{"soul gem":1,"bone":2,"soft pelt":2,"cloth":2,"herb (enchantment)":5,"herb (spiritual)":5,"wood (flexible + lightweight)":3,"paper":2},
+        "Illuminating":{"salt":3,"quartz":1,"glass":1,"herb (purification)":2,"herb (spiritual)":2},
+        "Intuitive":{"bone":1,"demon blood":1,"herb (hallucination)":1,"herb (purification)":1,"any spell scroll":1},
+        "Lasting":{"coal":1,"iron":1,"manganese":1},
+        "Geometer":{"coal":2,"stone":2,"marble":2,"obsidian":1,"bone":2},
+        "Poisoned Ring":{"silver":2,"bone":2,"herb (poisonous)":5},
+        "Antidote Ring":{"silver":2,"mercury":1,"herb (enhancement)":1,"herb (entropy)":1,"herb (stimulant)":1},
+        "Wakeful":{"mercury":1,"spell crystal":1,"feather":1,"ritual component":1,"herb (stimulant)":2},
+        "Flowing":{"copper":1,"mercury":2,"spell crystal":1,"ritual component":1,"herb (enhancement)":1,"herb (entropic)":1,"herb (stimulant)":3},
+        "Magically Resistant":{"coal":1,"salt":1,"quartz":1,"copper":2,"manganese":1,"spell crystal":1,"herb (enhancement)":1},
+        "Mind-Shielding":{"mercury":2,"gold":3,"soft pelt":1,"celestial blood":1,"herb (enhancement)":1,"herb (purification)":1},
+        "Calm":{"salt":1,"mercury":1,"sulfur":1,"soul gem":1,"bone":3,"demon blood":2,"ritual component":1,"herb (sedative)":5}
+    },
+    'Artificing':{
+        "Dichotomous":{"demon blood":1,"celestial blood":1,"herb (entropic)":3,"herb (healing)":3},
+        "Passing":{"feathers":3,"glass":1,"sanctified water":1,"herb (enchantment)":3,"herb (purification)":3},
+        "Arcane Detection":{"salt":2,"quartz":1,"cloth":1,"ritual component":1,"wood (dense + flexible)":2},
+        "Lasting":{"coal":1,"iron":1,"manganese":1},
+        "Living":{"soul gem":1,"bone":1,"feathers":1,"wood (dense + durable + strong)":1,"wood (flexible + lightweight)":1},
+        "Detective":{"quartz":2,"silver":1,"cloth":1,"zye scarab":1,"herb (hallucination)":3,"herb (spiritual)":3},
+        "Power-Focus":{"quartz":2,"mercury":1,"sulfur":1},
+        "Healing":{"bone":2,"celestial blood":2,"sanctified water":1,"herb (healing)":5,"wood (dense + strong)":1},
+        "Spell Reflecting":{"quartz":1,"spell crystal":1,"soft pelt":1,"ritual component":1,"wood (lightweight)":1},
+        "Dueling":{"coal":1,"salt":1,"copper":2,"manganese":1,"spell crystal":1,"herb (enhancement)":1},
+        "Stitching":{"sulfur":1,"bone":1,"demon blood":1,"child's tears":1,"herb (poisonous)":2,"herb (rejuvenation)":2},
+        "Translucent":{"mercury":1,"spell crystal":1,"feathers":1,"fae blood":1,"glass":1,"ritual component":1},
+        "Free-Willed":{"coal":1,"quartz":1,"obsidian":1,"honey":2,"celestial blood":1,"fae blood":1,"herb (hallucination)":8},
+        "Olive-Branch":{"salt":1,"marble":1,"soul gem":1,"soft pelt":1,"demon blood":1,"cloth":1,"zye blood parasite":1}
+    },
+    'Tailoring':{
+        "Lasting":{"coal":1,"iron":1,"manganese":1},
+        "Reinforced":{"large hide":2,"cloth":2},
+        "Spellcasting":{"quartz":1,"silver":1,"herb (enhancement)":1},
+        "Disguise":{"soft pelt":2,"cloth":2},
+        "Spirit Protection":{"mercury":1,"silver":3,"soft pelt":1,"sanctified water":1,"herb (purification)":1},
+        "Glyph-Guarded":{"salt":1,"quartz":1,"mercury":1,"ritual component":1,"herb (enhancement)":1},
+        "Physically Resistant":{"honey":4,"large hide":2},
+        "Wakethorn":{"obsidian":1,"bone":3,"large hide":1,"herb (entropic)":3,"herb (stimulant)":3},
+        "Mindshatter":{"quartz":1,"silver":1,"soft pelt":1,"fae blood":1,"herb (hallucination)":3},
+        "Rageguard":{"mercury":2,"zye blood parasite":1,"herb (entropic)":3,"herb (stimulant)":3},
+        "Deathward":{"gold":1,"feather":3,"celestial blood":2,"sanctified water":1,"herb (rejuvenation)":3,"herb (spiritual)":3}
+    },
+    'Fletching':{
+        "Bundle of Venom Arrows":{"feathers":1,"herb (poisonous)":5},
+        "Bundle of Messenger Arrows":{"feathers":1,"wood (lightweight)":1},
+        "Bundle of 'Bricks on Sticks'":{"stone":1,"wood (dense)":1},
+        "Bundle of Harpoon Arrows":{"iron":1,"wood (durable)":1},
+        "Bundle of Grappling Arrows":{"feathers":1,"wood (strong)":1},
+        "Bundle of Blessed Arrows":{"feathers":1,"sanctified water":1},
+        "Bundle of Marking Arrows":{"zye scarab":1,"wood (flexible)":1},
+        "Iron Arrow":{"iron":1,"feathers":1,"wood (lightweight)":1},
+        "Silver Arrow":{"silver":1,"feathers":1,"sanctified water":1,"herb (purification)":3,"wood (lightweight)":1},
+        "Gold Arrow":{"gold":1,"feathers":1,"sanctified water":1,"herb (purification)":3,"wood (lightweight)":1},
+        "Arrow-Casting":{"mercury":1,"silver":1,"herb (enhancement)":1},
+        "Lasting":{"coal":1,"iron":1,"manganese":1},
+        "Elemental":{"coal":2,"mercury":2,"sulfur":2,"spell crystal":1,"feathers":1,"herb (enhancement)":2},
+        "Life-Drinking":{"obsidian":1,"soul gem":1,"demon blood":1,"zye blood parasite":2,"herb (entropic)":4,"herb (spiritual)":4},
+        "Lethal":{"coal":2,"iron":2,"manganese":2}
+    },
+    "Engineering":{
+        "Forge":{"coal":20,"stone":10,"iron":10},
+        "Kitchen":{"coal":8,"salt":10,"stone":8,"iron":4,"marble":2,"herb (purification)":5,"wood (dense + durable)":8},
+        "Shrine":{"stone":4,"sanctified water":1,"herb (purification)":3},
+        "Work Table":{"iron":8,"large hide":3,"wood (dense + durable)":10},
+        "Laboratory":{"coal":4,"salt":2,"copper":2,"marble":1,"mercury":3,"sulfur":6,"spell crystal":1,"herb (poisonous)":3,"herb (purification)":3},
+        "Jail":{"stone":20,"iron":10},
+        "Wooden Fortified Building":{"iron":4,"glass":1,"wood (durable)":15},
+        "Library":{"iron":2,"feathers":3,"paper":10,"wood (durable)":10},
+        "Tavern":{"stone":15,"food (any variety)":8,"glass":2,"wood (any variety)":15},
+        "Hideout":{"iron":4,"wood (durable)":15},
+        "Mobile Triage Tent":{"large hide":3,"cloth":2,"herb (healing)":8,"herb (purification)":4,"herb (rejuvenation)":2,"herb (sedative)":2,"herb (stimulant)":4},
+        "Ship":{"workers":10,"iron":2,"cloth":6,"wood (durable)":10},
+        "Alchemical Distillery":{"quartz":2,"copper":1,"marble":2,"glass":5,"herb (enchantment)":2,"herb (enhancement)":2,"herb (entropic)":2,"herb (hallucination)":2,"herb (healing)":2,"herb (poisonous)":2,"herb (purification)":2,"herb (sedative)":2,"herb (spiritual)":2,"herb (stimulant)":2,"herb (rejuvenation)":2,"wood (flexible)":5},
+        "Healer's Tent":{"large hide":5,"cloth":3,"herb (healing)":10,"herb (purification)":5,"herb (rejuvenation)":3,"herb (sedative)":3,"herb (stimulant)":5},
+        "Stone Fortified Building":{"wooden fortified building":1,"stone":15,"iron":6},
+        "Soul of the Musician":{"soul gem":4,"ritual component":1,"wood (lightweight + strong)":2,"wood (dense + durable)":2},
+        "Enhanced Furnace":{"forge":1,"coal":4,"stone":1,"iron":2,"wood (strong + durable)":2},
+        "Printing Press":{"iron":2,"paper":15,"wood (durable)":10},
+        "Dungeon":{"jail":1,"stone":20,"iron":10,"herb (healing)":5,"herb (poisonous)":5},
+        "Warship":{"ship":1,"iron":6,"manganese":2,"cloth":4,"wood (strong)":4},
+        "Cargo Ship":{"ship":1,"iron":3,"cloth":4,"wood (dense)":4,"wood (strong)":4}
+    }
 };
 
-/* ---------- ui refs & state ---------- */
 const container = document.getElementById('tables');
 const addedBox = document.getElementById('added-box');
 const filterInput = document.getElementById('filter');
-const debugEl = document.getElementById('debug');
+const addedItems = new Set();
 
-let addedItems = []; // maintain as array for deterministic ordering and JSON
-
-/* ---------- helpers ---------- */
-function logDebug(msg){
-  console.log(msg);
-  debugEl.textContent = String(msg);
-}
 function formatMaterials(matObj){
-  if(!matObj || typeof matObj !== 'object') return '—';
-  return Object.entries(matObj).map(([name,qty]) => `${name}: ${qty}`).join('\n');
+    return Object.entries(matObj).map(([name,qty]) => `${name}: ${qty}`).join('\n');
 }
 
-/* build the tables by category, each category is its own table with left-aligned header */
 function renderTables(filterText=''){
-  container.innerHTML = '';
-  const f = filterText.trim().toLowerCase();
+    container.innerHTML='';
+    const f = filterText.trim().toLowerCase();
 
-  for(const [category, items] of Object.entries(crafted_item_lookup)){
-    // create a section with header (left aligned)
-    const section = document.createElement('section');
-    const title = document.createElement('h2');
-    title.className = 'section-title';
-    title.style.textAlign = 'left';
-    title.textContent = category;
-    section.appendChild(title);
+    for(const [category,items] of Object.entries(crafted_item_lookup)){
+        const section = document.createElement('section');
+        const title = document.createElement('h2');
+        title.textContent = category;
+        section.appendChild(title);
 
-    const table = document.createElement('table');
-    const thead = document.createElement('thead');
-    thead.innerHTML = '<tr><th style="text-align:left">Item</th><th style="text-align:left">Materials (name: qty)</th><th style="text-align:left">Action</th></tr>';
-    const tbody = document.createElement('tbody');
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        thead.innerHTML = '<tr><th>Item</th><th>Materials (name: qty)</th><th>Action</th></tr>';
+        const tbody = document.createElement('tbody');
 
-    for(const [item, materials] of Object.entries(items)){
-      const haystack = (item + ' ' + Object.keys(materials).join(' ')).toLowerCase();
-      if(!f || haystack.includes(f)){
-        const tr = document.createElement('tr');
+        for(const [item,materials] of Object.entries(items)){
+            const haystack = item.toLowerCase() + ' ' + Object.keys(materials).join(' ').toLowerCase();
+            if(!f || haystack.includes(f)){
+                const tr = document.createElement('tr');
+                const tdItem = document.createElement('td');
+                tdItem.textContent = item;
+                const tdMats = document.createElement('td');
+                tdMats.className = 'materials';
+                tdMats.textContent = formatMaterials(materials);
+                const tdAction = document.createElement('td');
+                const btn = document.createElement('button');
+                btn.textContent = 'Add';
+                btn.onclick = () => handleAdd(item);
+                tdAction.appendChild(btn);
+                tr.append(tdItem, tdMats, tdAction);
+                tbody.appendChild(tr);
+            }
+        }
 
-        const tdItem = document.createElement('td');
-        tdItem.textContent = item;
-
-        const tdMats = document.createElement('td');
-        tdMats.className = 'materials';
-        tdMats.textContent = formatMaterials(materials);
-
-        const tdAction = document.createElement('td');
-        const addBtn = document.createElement('button');
-        addBtn.textContent = 'Add';
-        addBtn.addEventListener('click', () => handleAdd(item));
-        tdAction.appendChild(addBtn);
-
-        tr.append(tdItem, tdMats, tdAction);
-        tbody.appendChild(tr);
-      }
+        if(tbody.children.length > 0){
+            table.append(thead, tbody);
+            section.appendChild(table);
+            container.appendChild(section);
+        }
     }
-
-    if(tbody.children.length > 0){
-      table.append(thead, tbody);
-      section.appendChild(table);
-      container.appendChild(section);
-    }
-  }
 }
 
-/* ---------- add/remove items ---------- */
 function handleAdd(item){
-  if(!addedItems.includes(item)){
-    addedItems.push(item);
-    renderAdded();
-  } else {
-    // optional: flash or notify already added
-    logDebug(`"${item}" already in list.`);
-  }
+    if(!addedItems.has(item)){
+        addedItems.add(item);
+        renderAdded();
+    }
 }
+
 function handleRemove(item){
-  const idx = addedItems.indexOf(item);
-  if(idx !== -1){
-    addedItems.splice(idx,1);
+    addedItems.delete(item);
     renderAdded();
-  }
 }
 
 function renderAdded(){
-  addedBox.innerHTML = '';
-  if(addedItems.length === 0){
-    addedBox.textContent = '(none yet)';
-    return;
-  }
-  addedItems.forEach(item => {
-    const div = document.createElement('div');
-    div.className = 'added-item';
-
-    const span = document.createElement('span');
-    span.className = 'name';
-    span.textContent = item;
-
-    const removeBtn = document.createElement('button');
-    removeBtn.className = 'remove-btn';
-    removeBtn.textContent = 'Remove';
-    removeBtn.addEventListener('click', () => handleRemove(item));
-
-    div.append(span, removeBtn);
-    addedBox.appendChild(div);
-  });
-}
-
-/* ---------- submission with robust error handling and fallback endpoints ---------- */
-async function postSelected(selected){
-  // try primary endpoint then fallback
-  const endpoints = ['/api/set_items','/submit_items','/api/submit_items'];
-  for(const ep of endpoints){
-    try{
-      logDebug(`Attempting POST to ${ep} ...`);
-      const res = await fetch(ep, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({selected})
-      });
-      const statusText = `${res.status} ${res.statusText}`;
-      let bodyText = '';
-      // attempt to parse JSON, otherwise text
-      try { bodyText = await res.text(); } catch(e){ bodyText = '<unreadable body>'; }
-      if(res.ok){
-        // if server returns JSON with redirect, follow it; otherwise just show success
-        try{
-          const parsed = JSON.parse(bodyText || '{}');
-          if(parsed.redirect){
-            logDebug(`Saved successfully; redirecting to ${parsed.redirect}`);
-            window.location.href = parsed.redirect;
-            return;
-          }
-        }catch(e){
-          // not JSON — proceed
-        }
-        alert(`Saved successfully to ${ep}. Server response: ${statusText}`);
+    if(addedItems.size === 0){
+        addedBox.innerHTML = '(none yet)';
         return;
-      } else {
-        // not OK - continue to next endpoint but show helpful info
-        logDebug(`Endpoint ${ep} returned ${statusText}. Response body:\n${bodyText}`);
-      }
-    }catch(err){
-      logDebug(`Network/Fetch error posting to ${ep}: ${err}`);
     }
-  }
-  // if we get here, all endpoints failed
-  alert('Failed to save to server. See console or debug area for details.');
+    addedBox.innerHTML = '';
+    for(const item of addedItems){
+        const div = document.createElement('div');
+        div.className = 'added-item';
+        div.textContent = item;
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = 'Remove';
+        removeBtn.className = 'remove-btn';
+        removeBtn.onclick = () => handleRemove(item);
+        div.appendChild(removeBtn);
+        addedBox.appendChild(div);
+    }
 }
 
-/* ---------- wire up UI ---------- */
-document.getElementById('goToGathering').addEventListener('click', async () => {
-  if(addedItems.length === 0){
-    alert('Please add at least one craft before proceeding.');
-    return;
-  }
-  // disable button while posting
-  const btn = document.getElementById('goToGathering');
-  btn.disabled = true;
-  btn.textContent = 'Saving...';
-  await postSelected(addedItems);
-  btn.disabled = false;
-  btn.textContent = 'Proceed to Character Setup';
+filterInput.addEventListener('keydown', e => {
+    if(e.key === 'Enter') renderTables(filterInput.value);
 });
 
-/* filter handling */
-filterInput.addEventListener('keydown', (e) => {
-  if(e.key === 'Enter'){
-    e.preventDefault();
-    renderTables(filterInput.value);
-  }
+document.getElementById("goToGathering").addEventListener("click", async () => {
+    const selected = Array.from(addedItems);
+    if(selected.length === 0){
+        alert("Please add at least one craft before proceeding.");
+        return;
+    }
+    try{
+        const res = await fetch("/api/set_items", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({selected})
+        });
+        if(res.ok) {
+            window.location.href = "/set_gathering";
+        } else {
+            alert("Error saving data.");
+        }
+    } catch(err) {
+        alert("Failed to connect to server.");
+    }
 });
 
-/* initial render */
 renderTables();
-renderAdded();
 </script>
 </body>
 </html>
