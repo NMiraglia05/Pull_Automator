@@ -491,6 +491,9 @@ def submit_gathering():
     selected_items = data.get("selected_items", [])
     character_data = data.get("character_data", {})
 
+    print(selected_items)
+    print(character_data)
+
     ass = PullingPlanner(character_data, selected_items)
 
     pull_schedule = ass.pulls
