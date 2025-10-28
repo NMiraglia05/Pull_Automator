@@ -69,7 +69,7 @@
     // Flask will pass pull_schedule and not_pulled into the template
     const pullSchedule = {{ pull_schedule|tojson }};
     const notPulled = {{ not_pulled|tojson }};
-    const categories = ['mining','hunting','mercantile','black_market','cargo_ship'];
+    const categories = ['mining','hunting','mercantile','black_market','herbalism','cargo_ship'];
 
     const tbody = document.querySelector('#ordersTable tbody');
     const unableBody = document.querySelector('#unableTable tbody');
