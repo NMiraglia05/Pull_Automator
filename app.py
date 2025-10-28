@@ -25,7 +25,6 @@ pivoted_items = {
         'spell crystal': {'points': 4}
     },
     'hunting': {
-        'bone': {'points': 1},
         'feathers': {'points': 1},
         'honey': {'points': 1, 'expiration': '1 month'},
         'food': {'points': 1, 'expiration': '1 month'},
@@ -46,6 +45,7 @@ pivoted_items = {
         'ritual component': {'points': 4}
     },
     'black_market': {
+        'bone':{'points':1},
         'zye scarab': {'points': 3},
         'zye blood parasites': {'points': 4}
     }
@@ -53,7 +53,7 @@ pivoted_items = {
 
 alternates={
     'blood ink':'black_market',
-    'bone':'black_market'
+    'bone':'hunting'
 }
 
 crafted_item_lookup={'Animal Traps': {'iron': 3},
