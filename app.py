@@ -102,9 +102,7 @@ crafted_item_lookup={
         "Wakethorn": {"obsidian":1, "bone":5, "herb (entropic)":3, "herb (stimulant)":3, "wood (flexible)":4},
         "Mindshatter": {"quartz":2, "silver":2, "fae blood":1, "herb (hallucination)":3},
         "Rageguard": {"mercury":3, "zye blood parasite":1, "herb (entropic)":3, "herb (stimulant)":3},
-        "Deathward": {"gold":1, "feather":4, "celestial blood":2, "sanctified water":2, "herb (rejuvenation)":3}
-    },
-    "Shieldsmithing":{
+        "Deathward": {"gold":1, "feather":4, "celestial blood":2, "sanctified water":2, "herb (rejuvenation)":3},
         "Perfect Grip":{"iron":3,"soft pelt":1,"wood (flexible + durable)":1},
         "Spellcasting":{"quartz":1,"silver":1,"herb (enhancement)":1},
         "Savior":{"iron":1,"mercury":1,"manganese":1},
