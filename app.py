@@ -225,7 +225,7 @@ class OrderManager:
 
         for item in orders:
             try:
-                pull_det=Pull(itemitem.lower())
+                pull_det=Pull(item.lower())
             except KeyError:
                 continue
             for _ in range(orders[item]):
