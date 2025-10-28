@@ -221,6 +221,7 @@ class OrderManager:
             'black_market':[],
             'hunting':[],
             'mining':[],
+            'herbalism':[],
             'cargo_ship':[]}  # this will mutate so be careful- it is used to pass whatever the given orders are needed into other contexts
 
         for item in orders:
@@ -228,6 +229,8 @@ class OrderManager:
                 pull_det=Pull(item.lower())
             except KeyError:
                 continue
+            if pull_det.is_herb is True:
+                orders[item]=math.ceil(orders[item]/5) # herbs always come in sets of 5- therefore needing any between 1 and 5 is functionally identical. Dividing by 5 means if you need, say, 12, you get 3.
             for _ in range(orders[item]):
                 self.pulls[pull_det.cat].append(pull_det)
 
@@ -263,6 +266,7 @@ class OrderManager:
             'black_market':[],
             'hunting':[],
             'mining':[],
+            'herbalism':[],
             'cargo_ship':[]}
         for pull in list_:
             self.pulls[pull.cat].append(pull)
@@ -276,14 +280,31 @@ class OrderManager:
 
 class Pull:
     def __init__(self,item):
-        self.item=item
-        dic_lookup=item_lookup[item]
+        self.item=item.lower()
+        try:
+            dic_lookup=item_lookup[item]
+        except KeyError:
+            if 'herb' in self.item:
+                self.parse_herb()
+                return
+            else:
+                raise KeyError
         self.cost=dic_lookup['points']
         self.cat=dic_lookup['cat']
         if self.cost<=2 and self.cat=='mercantile':
             self.cargo_ship=True
         else:
             self.cargo_ship=False
+        self.is_herb=False
+
+    def parse_herb(self):
+        self.cost=1 
+        match=re.search(r'\((.*?)\)',self.item)
+        if match:
+            self.herb_type = match.group(1)
+        self.cat='herbalism'
+        self.cargo_ship=False
+        self.is_herb=True
 
     def alternate(self):
         if self.item in alternates:
@@ -300,6 +321,7 @@ class AssignmentManager:
             'hunting':employees_,
             'black_market':employees_,
             'mining':employees_,
+            'herbalism':employees_,
             'cargo_ship':employees_
         }
         
@@ -361,6 +383,8 @@ class AssignmentManager:
         current_score=employee.gathering_skills[category]
         new_score=current_score-pull.cost
         employee.gathering_skills[category]=new_score
+        if pull.is_herb is True:
+            pull.item=pull.herb_type
         employee.assigned_pulls[category].append(pull.item)
         
 class Assignments:
@@ -410,6 +434,7 @@ class Employee(Person):
             'hunting':[],
             'mercantile':[],
             'black_market':[],
+            'herbalism':[],
             'cargo_ship':[]
         }
 
