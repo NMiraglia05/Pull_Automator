@@ -199,7 +199,6 @@ crafted_item_lookup={
         "Warship":{"Ship":1,"Iron":6,"Manganese":2,"Cloth":4,"Wood (Strong)":4},
         "Cargo Ship":{"Ship":1,"Iron":3,"Cloth":4,"Wood (Dense)":4,"Wood (Strong)":4}
     }
-}
 
 item_lookup = {item: {**data, 'cat': cat} for cat, items in pivoted_items.items() for item, data in items.items()}
 
