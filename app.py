@@ -495,6 +495,10 @@ class PullingPlanner:
         orders=dict(Counter(order_mats))
         return orders
 
+@app.route("/")
+def home():
+    return render_template("select_items.html")
+
 @app.route("/select_items")
 def select_items():
     return render_template("select_items.html")
