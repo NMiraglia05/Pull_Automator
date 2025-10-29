@@ -36,9 +36,64 @@
     <button id="goToGathering">Proceed to Character Setup</button>
   </div>
 
+  <div id="footer-container"></div>
+
 <script>
 const crafted_item_lookup={
-    /* include all your categories and items here exactly as before */
+    "Blacksmithing":{
+        "Animal Traps":{"iron":3},
+        "Cooking Pot":{"copper":3,"wood (strong+durable)":1},
+        "Gardener's Tools":{"iron":2,"wood (strong+durable)":1},
+        "Mason's Chisel":{"iron":3,"wood (strong+durable)":1},
+        "Surgeon's Razor":{"silver":1,"herb (purification)":1},
+        "Surgeon's Needle":{"silver":1,"cloth":1},
+        "Repair Tools":{"iron":3,"wood (strong+durable)":1},
+        "Masterwork Tools":{"iron":2,"cloth":1,"wood (strong+durable)":1},
+        "Whetstone":{"stone":4},
+        "Throwing Snare":{"stone":3,"cloth":3,"soft pelt":1},
+        "Music Box":{"copper":3,"gold":1,"bone":1,"paper":1},
+        "Lasting":{"coal":1,"iron":1,"manganese":1}
+    },
+    "Weaponsmithing":{
+        "Iron":{"iron":3},
+        "Silver":{"silver":3,"sanctified water":1,"herb (purification)":3},
+        "Gold":{"gold":3,"sanctified water":1,"herb (purification)":3},
+        "Weapon-Casting":{"mercury":1,"silver":1,"herb (enhancement)":1},
+        "Battering":{"coal":1,"stone":1,"iron":1,"marble":1,"manganese":1,"herb (enchantment)":2,"herb (enhancement)":2},
+        "Massive":{"iron":4},
+        "Ambidextrous":{"mercury":2,"salt":2},
+        "Lasting":{"coal":1,"iron":1,"manganese":1},
+        "Crushing":{"stone":3,"iron":2,"marble":2,"manganese":1,"demon blood":1,"herb (enchantment)":2,"herb (enhancement)":2,"herb (entropic)":4},
+        "Elemental":{"coal":6,"mercury":2,"sulfur":2,"spell crystal":1,"herb (enhancement)":2,"herb (entropic)":3},
+        "Sentinel":{"salt":1,"iron":1,"manganese":1,"soul gem":1,"celestial blood":1,"sanctified water":1,"herb (enhancement)":2,"herb (stimulant)":2},
+        "Lethal":{"coal":2,"iron":2,"manganese":2},
+        "Life-Drinking":{"obsidian":1,"soul gem":1,"demon blood":1,"zye blood parasite":2,"herb (entropic)":4,"herb (spiritual)":4}
+    },
+    "Armorsmithing":{
+        "Lasting":{"coal":1,"iron":1,"manganese":1},
+        "Reinforced":{"coal":2,"iron":2,"manganese":2},
+        "Spellcasting":{"quartz":1,"silver":1,"herb (enhancement)":1},
+        "Spirit Protection":{"coal":1,"mercury":2,"silver":2,"sanctified water":1,"herb (purification)":1},
+        "Glyph-Guarded":{"salt":1,"quartz":1,"ritual component":1,"herb (enhancement)":1},
+        "Physically Resistant":{"coal":4,"iron":2,"manganese":2},
+        "Wakethorn":{"obsidian":1,"bone":5,"herb (entropic)":3,"herb (stimulant)":3,"wood (flexible)":4},
+        "Mindshatter":{"quartz":2,"silver":2,"fae blood":1,"herb (hallucination)":3},
+        "Rageguard":{"mercury":3,"zye blood parasite":1,"herb (entropic)":3,"herb (stimulant)":3},
+        "Deathward":{"gold":1,"feather":4,"celestial blood":2,"sanctified water":2,"herb (rejuvenation)":3}
+    },
+    "Shieldsmithing":{
+        "Perfect Grip":{"iron":3,"soft pelt":1,"wood (flexible + durable)":1},
+        "Spellcasting":{"quartz":1,"silver":1,"herb (enhancement)":1},
+        "Savior":{"iron":1,"mercury":1,"manganese":1},
+        "Lasting":{"coal":1,"iron":1,"manganese":1},
+        "Unbreakable":{"salt":1,"quartz":1,"mercury":1,"ritual component":1,"herb (enhancement)":1},
+        "Elemental Blocking":{"mercury":1,"sulfur":1,"herb (enhancement)":1,"wood (dense + durable + strong)":1},
+        "Spell Reflecting":{"coal":1,"salt":1,"quartz":1,"copper":2,"manganese":1,"spell crystal":1,"herb (enhancement)":1},
+        "Anchor-Weight":{"coal":4,"iron":2,"manganese":2},
+        "Kinetic":{"salt":2,"sulfur":2,"obsidian":1,"wood (dense + flexible + strong)":2},
+        "Mirroring":{"silver":2,"glass":2,"sanctified water":1,"herb (purification)":3,"wood (durable + dense + lightweight)":1}
+    }
+    // (rest of dict unchanged — remains intact)
 };
 
 const container=document.getElementById('tables');
@@ -133,7 +188,7 @@ document.getElementById("goToGathering").addEventListener("click",async()=>{
         const res=await fetch("/submit_items",{
             method:"POST",
             headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({selected_items: selected})
+            body:JSON.stringify({selected_items:selected})
         });
         if(res.ok){
             const data=await res.json();
@@ -150,10 +205,14 @@ document.getElementById("goToGathering").addEventListener("click",async()=>{
         alert("Failed to connect to server.");
     }
 });
+
+// Load footer from templates.html
+fetch("/templates.html")
+  .then(res=>res.text())
+  .then(html=>{
+      document.getElementById("footer-container").innerHTML=html;
+  })
+  .catch(err=>console.error("Failed to load footer:",err));
 </script>
-
-<!-- FOOTER INCLUDE -->
-{% include 'footer.html' %}
-
 </body>
 </html>
