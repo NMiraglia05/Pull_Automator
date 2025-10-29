@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -29,6 +28,7 @@
     .controls{display:flex;gap:8px;align-items:center;margin-bottom:12px}
     button{background:var(--accent);border:none;color:white;padding:8px 12px;border-radius:8px;cursor:pointer}
     button.secondary{background:#64748b}
+    .header-row td{font-weight:bold;background:#e0f2f1;text-align:center}
   </style>
 </head>
 <body>
@@ -76,11 +76,13 @@
 
     function renderOrders(){
       tbody.innerHTML = '';
-      for (const entry of pullSchedule){
-        const keys = Object.keys(entry);
-        if (keys.length === 0) continue;
-        const topKey = keys[0];
-        const catObj = entry[topKey];
+      for (const [topKey, catObj] of Object.entries(pullSchedule)){
+        // Header row for top-level key
+        const headerTr = document.createElement('tr');
+        headerTr.classList.add('header-row');
+        headerTr.innerHTML = `<td colspan="3">Pull ${topKey}</td>`;
+        tbody.appendChild(headerTr);
+
         for (const cat of categories){
           const items = Array.isArray(catObj[cat]) ? catObj[cat] : [];
           const itemsText = items.length ? items.join(', ') : '—';
@@ -107,19 +109,4 @@
     document.getElementById('copyBtn').addEventListener('click', async ()=>{
       try{
         await navigator.clipboard.writeText(JSON.stringify(pullSchedule, null, 2));
-        alert('JSON copied to clipboard');
-      } catch (err){
-        alert('Could not copy: ' + err);
-      }
-    });
-
-    document.getElementById('reloadBtn').addEventListener('click', ()=>{
-      renderOrders();
-      renderUnable();
-    });
-
-    renderOrders();
-    renderUnable();
-  </script>
-</body>
-</html>
+        alert('JSON copie
