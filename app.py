@@ -53,7 +53,8 @@ pivoted_items = {
 
 alternates={
     'blood ink':'black_market',
-    'bone':'hunting'
+    'bone':'hunting',
+    'demon blood':'black_market'
 }
 
 crafted_item_lookup={'Animal Traps': {'iron': 3},
