@@ -76,7 +76,10 @@
 
     function renderOrders(){
       tbody.innerHTML = '';
-      for (const [topKey, catObj] of Object.entries(pullSchedule)){
+      for (const pull of pullSchedule){
+        const topKey = Object.keys(pull)[0];
+        const catObj = pull[topKey];
+
         // Add a header row for this pull
         const headerTr = document.createElement('tr');
         headerTr.classList.add('header-row');
